@@ -1,85 +1,133 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Big Text Area</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Big Text Area</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-    body {
-      margin: 0;
-      padding: 20px;
-    }
-    form {
-      height: calc(100vh - 40px);
-      width: calc(100vw - 40px);
-      display: grid;
-      grid-auto-flow: row;
-      grid-template-rows: 1fr auto;
-    }
+      body {
+        margin: 0;
+        padding: 20px;
+      }
+      form {
+        height: calc(100vh - 40px);
+        width: calc(100vw - 40px);
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-rows: 1fr auto;
+      }
 
-    #textarea,
-    #tinymde-editor {
-      border: solid 1px black;
-      font-family: monospace;
-    }
-  </style>
-  <link
-    rel="stylesheet"
-    type="text/css"
-    href="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.css"
-  />
-</head>
-<body>
-  <form action="#" id="form">
-    <textarea id="textarea" name="textarea" cols="80" rows="10"></textarea>
-    <div id="controls">
-      <label>
-        <input id="use-markdown" type="checkbox" />
-        Format content with markdown
-      </label>
+      #textarea,
+      #tinymde-editor {
+        border: solid 1px black;
+        font-family: monospace;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.css"
+    />
+  </head>
+  <body>
+    <form action="#" id="form">
+      <textarea id="textarea" name="textarea" cols="80" rows="10"></textarea>
+      <div id="controls">
+        <label id="format-content-label">
+          <input id="format-content" type="checkbox" />
+          Format content using GitHub-flavored markdown
+        </label>
 
-      <label>
-        <input id="save-text" type="checkbox" />
-        Save text
-      </label>
-    </div>
-  </form>
-  <script src="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.js"></script>
+        <label id="save-content-label">
+          <input id="save-content" type="checkbox" />
+          Preserve content locally
+        </label>
+      </div>
+    </form>
+    <script src="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.js"></script>
 
-  <script>
-    (function() {
-
-    function updateMarkdownHandling(event) {
-          const formElem = document.getElementById("form");
+    <script>
       const textarea = document.getElementById("textarea");
-      const isMarkdownCheckboxChecked = this.checked;
+      const markdownCheckbox = document.getElementById("format-content");
+      const saveTextCheckbox = document.getElementById("save-content");
+      let tinyMDE;
 
-      if (isMarkdownCheckboxChecked) {
-        if (typeof TinyMDE === "undefined") {
-          alert("Text cannot be formatted because the plug-in didn't load!")
-
-          this.checked = false;
-          return;
+      (function initializeApp() {
+        if (localStorage) {
+          saveTextCheckbox.checked = localStorage.getItem("save") === "true";
+          markdownCheckbox.checked = localStorage.getItem("format") === "true";
+          textarea.value = localStorage.getItem("content") ?? "";
+        } else {
+          saveTextCheckbox.disabled = true;
         }
 
-        const tinyMDE = new TinyMDE.Editor({ textarea });
+        if (saveTextCheckbox.checked) {
+          saveContent();
+          textarea.addEventListener("input", saveContent);
+        }
+        if (markdownCheckbox.checked) {
+          activateFormatting();
+        }
+
+        markdownCheckbox.addEventListener("change", updateMarkdownHandling);
+        saveTextCheckbox.addEventListener("change", updateSaveText);
+      })();
+
+      function activateFormatting() {
+        tinyMDE = new TinyMDE.Editor({ textarea });
         tinyMDE.e.id = "tinymde-editor";
-      } else {
-        if (typeof TinyMDE !== "undefined") {
-          document.getElementById("tinymde-editor").remove();
-          textarea.setAttribute("style", "display: 'inherit'")
+
+        if (saveTextCheckbox.checked) {
+          textarea.removeEventListener("input", saveContent);
+          tinyMDE.addEventListener("change", saveContent);
         }
       }
-    }
 
-      const markdownCheckbox = document.getElementById("use-markdown");
-      markdownCheckbox.addEventListener("change", updateMarkdownHandling);
-    })();
-  </script>
-</body>
+      function deactivateFormatting() {
+        tinyMDE.e.remove();
+        textarea.setAttribute("style", "display: 'inherit'");
+
+        if (saveTextCheckbox.checked) {
+          textarea.addEventListener("input", saveContent);
+        }
+      }
+
+      function updateMarkdownHandling(event) {
+        const isMarkdownCheckboxChecked = this.checked;
+        localStorage.setItem("format", isMarkdownCheckboxChecked);
+
+        if (isMarkdownCheckboxChecked) {
+          if (typeof TinyMDE === "undefined") {
+            alert("Text cannot be formatted because the plug-in didn't load!");
+
+            this.checked = false;
+            return;
+          }
+          activateFormatting();
+        } else {
+          deactivateFormatting();
+        }
+      }
+
+      function updateSaveText(event) {
+        localStorage.setItem("save", String(this.checked));
+        if (this.checked) {
+          saveContent();
+          textarea.addEventListener("input", saveContent);
+        } else {
+          localStorage.removeItem("content");
+          textarea.removeEventListener("input", saveContent);
+        }
+      }
+
+      function saveContent() {
+        localStorage.setItem("content", textarea.value);
+      }
+    </script>
+  </body>
 </html>
