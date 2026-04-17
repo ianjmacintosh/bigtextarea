@@ -6,19 +6,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Big Text Area</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 20px;
     }
-    textarea {
+    form {
       height: calc(100vh - 40px);
       width: calc(100vw - 40px);
+      display: grid;
+      grid-auto-flow: row;
+      grid-template-rows: 1fr auto;
+    }
+
+    #textarea,
+    #tinymde-editor {
+      border: solid 1px black;
+      font-family: monospace;
     }
   </style>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.css"
+  />
 </head>
 <body>
-  <form action="#">
-    <textarea name="text" id="text" cols="80" rows="10"></textarea>
+  <form action="#" id="form">
+    <textarea id="textarea" name="textarea" cols="80" rows="10"></textarea>
+    <div id="controls">
+      <label>
+        <input id="use-markdown" type="checkbox" />
+        Format content with markdown
+      </label>
+
+      <label>
+        <input id="save-text" type="checkbox" />
+        Save text
+      </label>
+    </div>
   </form>
+  <script src="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.js"></script>
+
+  <script>
+    (function() {
+
+    function updateMarkdownHandling(event) {
+          const formElem = document.getElementById("form");
+      const textarea = document.getElementById("textarea");
+      const isMarkdownCheckboxChecked = this.checked;
+
+      if (isMarkdownCheckboxChecked) {
+        if (typeof TinyMDE === "undefined") {
+          alert("Text cannot be formatted because the plug-in didn't load!")
+
+          this.checked = false;
+          return;
+        }
+
+        const tinyMDE = new TinyMDE.Editor({ textarea });
+        tinyMDE.e.id = "tinymde-editor";
+      } else {
+        if (typeof TinyMDE !== "undefined") {
+          document.getElementById("tinymde-editor").remove();
+          textarea.setAttribute("style", "display: 'inherit'")
+        }
+      }
+    }
+
+      const markdownCheckbox = document.getElementById("use-markdown");
+      markdownCheckbox.addEventListener("change", updateMarkdownHandling);
+    })();
+  </script>
 </body>
 </html>
