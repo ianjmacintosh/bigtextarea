@@ -27,6 +27,27 @@
         border: solid 1px black;
         font-family: monospace;
       }
+
+      #controls {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      #controls input {
+        min-height: 24px;
+        min-width: 24px;
+      }
+
+      #controls label {
+        gap: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      footer {
+        text-align: right;
+      }
     </style>
     <link
       rel="stylesheet"
@@ -36,18 +57,35 @@
   </head>
   <body>
     <form action="#" id="form">
-      <textarea id="textarea" name="textarea" cols="80" rows="10"></textarea>
-      <div id="controls">
-        <label id="format-content-label">
-          <input id="format-content" type="checkbox" />
-          Format content using GitHub-flavored markdown
-        </label>
-
-        <label id="save-content-label">
-          <input id="save-content" type="checkbox" />
-          Preserve content locally
-        </label>
-      </div>
+      <textarea
+        id="textarea"
+        name="textarea"
+        cols="80"
+        rows="10"
+        role="main"
+        aria-label="Content"
+      ></textarea>
+      <ul id="controls">
+        <li>
+          <label id="format-content-label">
+            <input id="format-content" type="checkbox" />
+            <span
+              >Format content using Markdown (<a
+                href="https://www.markdownguide.org/cheat-sheet/"
+                target="_blank"
+                >cheat sheet</a
+              >)</span
+            >
+          </label>
+        </li>
+        <li>
+          <label id="save-content-label">
+            <input id="save-content" type="checkbox" />
+            <span>Preserve content locally</span>
+          </label>
+        </li>
+      </ul>
+      <footer>&copy; 2026 Ian J. MacIntosh</footer>
     </form>
     <script src="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.js"></script>
 
@@ -66,7 +104,8 @@
           saveTextCheckbox.disabled = true;
         }
 
-        if (saveTextCheckbox.checked) {
+        if (saveTextCheckbox.checked || localStorage.getItem("save") === null) {
+          saveTextCheckbox.checked = true;
           saveContent();
           textarea.addEventListener("input", saveContent);
         }
