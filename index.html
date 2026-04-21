@@ -22,7 +22,7 @@
         gap: 10px;
       }
 
-      form {
+      form[role="main"] {
         display: grid;
         grid-auto-rows: auto 1fr;
         gap: 5px;
@@ -46,17 +46,38 @@
         text-align: left;
       }
 
-      #settings::backdrop {
-        background-color: rgba(0, 0, 20, 0.8);
+      @keyframes bubble-in {
+        0% {
+          transform: scale(50%);
+        }
+        80% {
+          transform: scale(110%);
+        }
+
+        100% {
+          transform: scale(100%);
+        }
       }
 
-      #settings .content {
-        background: white;
-        height: auto;
-        width: auto;
-        display: inline-block;
-        text-align: left;
-        padding: 5px 20px;
+      @keyframes fade-in {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      #settings {
+        border: none;
+        animation:
+          fade-in 200ms ease-in,
+          bubble-in 200ms ease-in;
+      }
+
+      #settings::backdrop {
+        background-color: rgba(0, 0, 20, 0.8);
+        animation: fade-in 120ms;
       }
 
       #settings ul {
@@ -96,6 +117,26 @@
       #credits {
         text-align: right;
       }
+
+      #settings header {
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-columns: 1fr auto;
+      }
+
+      #settings header h1 {
+        padding: 0;
+        margin: 0;
+      }
+
+      #settings header button {
+        border: none;
+        background: transparent;
+      }
+
+      #settings header button:hover {
+        background: lightgoldenrodyellow;
+      }
     </style>
     <link
       rel="stylesheet"
@@ -104,7 +145,7 @@
     />
   </head>
   <body>
-    <form action="#" id="form">
+    <form action="#" id="form" role="main">
       <label for="textarea"> Enter text below</label>
       <textarea
         id="textarea"
@@ -127,27 +168,44 @@
       >
     </footer>
     <dialog aria-labelledby="settings-heading" closedby="any" id="settings">
-      <h1 id="settings-heading">Settings</h1>
-      <ul>
-        <li>
-          <label id="format-content-label" for="format-content">
-            <input id="format-content" type="checkbox" />
-            <span>
-              Format content using Markdown (<a
-                href="https://www.markdownguide.org/cheat-sheet/"
-                target="_blank"
-                >cheat sheet</a
-              >)</span
+      <form method="dialog">
+        <header>
+          <h1 id="settings-heading">Settings</h1>
+          <button aria-label='Close "Settings"'>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              fill="#000000"
+              viewBox="0 0 256 256"
             >
-          </label>
-        </li>
-        <li>
-          <label id="save-content-label" for="save-content">
-            <input id="save-content" type="checkbox" />
-            <span>Keep text on reload</span>
-          </label>
-        </li>
-      </ul>
+              <path
+                d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"
+              ></path>
+            </svg>
+          </button>
+        </header>
+        <ul>
+          <li>
+            <label id="format-content-label" for="format-content">
+              <input id="format-content" type="checkbox" />
+              <span>
+                Format content using Markdown (<a
+                  href="https://www.markdownguide.org/cheat-sheet/"
+                  target="_blank"
+                  >cheat sheet</a
+                >)</span
+              >
+            </label>
+          </li>
+          <li>
+            <label id="save-content-label" for="save-content">
+              <input id="save-content" type="checkbox" />
+              <span>Keep text on reload</span>
+            </label>
+          </li>
+        </ul>
+      </form>
     </dialog>
     <script src="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.js"></script>
 
