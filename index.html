@@ -119,16 +119,21 @@
     </form>
     <footer>
       <button id="settings-button"><span>Settings</span></button>
-      <span id="credits">&copy; 2026 Ian J. MacIntosh</span>
+      <span id="credits"
+        >&copy; 2026
+        <a href="https://www.ianjmacintosh.com/" target="_blank"
+          >Ian J. MacIntosh</a
+        ></span
+      >
     </footer>
     <dialog aria-labelledby="settings-heading" closedby="any" id="settings">
-      <h1 id="settings-heading" tabindex="-1">Settings</h1>
+      <h1 id="settings-heading">Settings</h1>
       <ul>
         <li>
           <label id="format-content-label" for="format-content">
             <input id="format-content" type="checkbox" />
-            <span
-              >Format content using Markdown (<a
+            <span>
+              Format content using Markdown (<a
                 href="https://www.markdownguide.org/cheat-sheet/"
                 target="_blank"
                 >cheat sheet</a
