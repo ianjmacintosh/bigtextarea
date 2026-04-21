@@ -13,6 +13,7 @@
       body {
         margin: 0;
         padding: 20px;
+        font-family: monospace;
 
         min-height: 100dvh;
         min-width: 100dvw;
@@ -42,16 +43,17 @@
         outline-offset: 1px;
       }
 
+      button {
+        font-family: monospace;
+      }
+
       #settings {
         text-align: left;
       }
 
       @keyframes bubble-in {
         0% {
-          transform: scale(50%);
-        }
-        80% {
-          transform: scale(110%);
+          transform: scale(90%);
         }
 
         100% {
@@ -68,16 +70,20 @@
         }
       }
 
+      .modal-visible {
+        filter: blur(4px);
+      }
+
       #settings {
         border: none;
         animation:
-          fade-in 200ms ease-in,
-          bubble-in 200ms ease-in;
+          fade-in 180ms ease-out,
+          bubble-in 180ms ease-out;
       }
 
       #settings::backdrop {
-        background-color: rgba(0, 0, 20, 0.8);
-        animation: fade-in 120ms;
+        background-color: rgba(20, 20, 20, 0.2);
+        animation: fade-in 180ms;
       }
 
       #settings ul {
@@ -255,6 +261,13 @@
       })();
 
       function toggleSettings() {
+        document.body.classList.add("modal-visible");
+        elements.settings.addEventListener(
+          "close",
+          function removeModalVisibleClass() {
+            document.body.classList.remove("modal-visible");
+          },
+        );
         elements.settings.showModal();
       }
 
