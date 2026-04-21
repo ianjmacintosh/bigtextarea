@@ -13,40 +13,83 @@
       body {
         margin: 0;
         padding: 20px;
-      }
-      form {
-        height: calc(100vh - 40px);
-        width: calc(100vw - 40px);
+
+        min-height: 100dvh;
+        min-width: 100dvw;
         display: grid;
         grid-auto-flow: row;
         grid-template-rows: 1fr auto;
+        gap: 10px;
       }
 
-      #textarea,
-      #tinymde-editor {
+      form {
+        display: grid;
+        grid-auto-rows: auto 1fr;
+        gap: 5px;
+      }
+
+      .textarea {
+        height: 100%;
+        width: 100%;
         border: solid 1px black;
         font-family: monospace;
+        font-size: 16px;
+        padding: 5px;
       }
 
-      #controls {
+      .textarea:focus {
+        outline: solid 2px dodgerblue;
+        outline-offset: 1px;
+      }
+
+      #settings {
+        text-align: left;
+      }
+
+      #settings::backdrop {
+        background-color: rgba(0, 0, 20, 0.8);
+      }
+
+      #settings .content {
+        background: white;
+        height: auto;
+        width: auto;
+        display: inline-block;
+        text-align: left;
+        padding: 5px 20px;
+      }
+
+      #settings ul {
         list-style: none;
         padding-left: 0;
       }
 
-      #controls input {
+      #settings input {
         min-height: 24px;
         min-width: 24px;
       }
 
-      #controls label {
+      #settings label {
         gap: 5px;
         display: flex;
         flex-direction: row;
         align-items: center;
       }
 
+      #settings input:focus,
+      #settings label:hover input[type="checkbox"] {
+        outline: solid 2px dodgerblue;
+        outline-offset: 1px;
+      }
+
+      .hidden,
+      #settings.hidden {
+        display: none;
+      }
+
       footer {
-        text-align: right;
+        display: grid;
+        grid-auto-columns: auto auto;
       }
     </style>
     <link
@@ -57,17 +100,27 @@
   </head>
   <body>
     <form action="#" id="form">
+      <label for="textarea"> Enter text below</label>
       <textarea
         id="textarea"
         name="textarea"
+        class="textarea"
         cols="80"
         rows="10"
         role="main"
         aria-label="Content"
+        autofocus
       ></textarea>
-      <ul id="controls">
+    </form>
+    <footer>
+      <button id="settings-button"><span>Settings</span></button>
+      <span id="credits">&copy; 2026 Ian J. MacIntosh</span>
+    </footer>
+    <dialog aria-labelledby="settings-heading" closedby="any" id="settings">
+      <h1 id="settings-heading" tabindex="-1">Settings</h1>
+      <ul>
         <li>
-          <label id="format-content-label">
+          <label id="format-content-label" for="format-content">
             <input id="format-content" type="checkbox" />
             <span
               >Format content using Markdown (<a
@@ -79,49 +132,69 @@
           </label>
         </li>
         <li>
-          <label id="save-content-label">
+          <label id="save-content-label" for="save-content">
             <input id="save-content" type="checkbox" />
-            <span>Preserve content locally</span>
+            <span>Keep text on reload</span>
           </label>
         </li>
       </ul>
-      <footer>&copy; 2026 Ian J. MacIntosh</footer>
-    </form>
+    </dialog>
     <script src="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.js"></script>
 
     <script>
-      const textarea = document.getElementById("textarea");
-      const markdownCheckbox = document.getElementById("format-content");
-      const saveTextCheckbox = document.getElementById("save-content");
-      let tinyMDE;
+      const elements = {
+        settings: document.getElementById("settings"),
+        textarea: document.getElementById("textarea"),
+        settingsButton: document.getElementById("settings-button"),
+        markdownCheckbox: document.getElementById("format-content"),
+        saveTextCheckbox: document.getElementById("save-content"),
+        tinyMDE: null,
+      };
 
       (function initializeApp() {
         if (localStorage) {
-          saveTextCheckbox.checked = localStorage.getItem("save") === "true";
-          markdownCheckbox.checked = localStorage.getItem("format") === "true";
-          textarea.value = localStorage.getItem("content") ?? "";
+          elements.checked = localStorage.getItem("save") === "true";
+          elements.markdownCheckbox.checked =
+            localStorage.getItem("format") === "true";
+          elements.textarea.value = localStorage.getItem("content") ?? "";
         } else {
-          saveTextCheckbox.disabled = true;
+          elements.saveTextCheckbox.disabled = true;
         }
 
-        if (saveTextCheckbox.checked || localStorage.getItem("save") === null) {
-          saveTextCheckbox.checked = true;
+        if (
+          elements.saveTextCheckbox.checked ||
+          localStorage.getItem("save") === null ||
+          localStorage.getItem("save") === "true"
+        ) {
+          elements.saveTextCheckbox.checked = true;
           saveContent();
-          textarea.addEventListener("input", saveContent);
+          elements.textarea.addEventListener("input", saveContent);
         }
-        if (markdownCheckbox.checked) {
+
+        if (elements.markdownCheckbox.checked) {
           activateFormatting();
         }
 
-        markdownCheckbox.addEventListener("change", updateMarkdownHandling);
-        saveTextCheckbox.addEventListener("change", updateSaveText);
+        // Open/close Settings window
+        elements.settingsButton.addEventListener("click", toggleSettings);
+
+        // Individual settings
+        elements.markdownCheckbox.addEventListener(
+          "change",
+          updateMarkdownHandling,
+        );
+        elements.saveTextCheckbox.addEventListener("change", updateSaveText);
       })();
+
+      function toggleSettings() {
+        elements.settings.showModal();
+      }
 
       function activateFormatting() {
         tinyMDE = new TinyMDE.Editor({ textarea });
-        tinyMDE.e.id = "tinymde-editor";
+        tinyMDE.e.classList.add("textarea");
 
-        if (saveTextCheckbox.checked) {
+        if (elements.saveTextCheckbox.checked) {
           textarea.removeEventListener("input", saveContent);
           tinyMDE.addEventListener("change", saveContent);
         }
@@ -129,9 +202,9 @@
 
       function deactivateFormatting() {
         tinyMDE.e.remove();
-        textarea.setAttribute("style", "display: 'inherit'");
+        elements.textarea.setAttribute("style", "display: inherit");
 
-        if (saveTextCheckbox.checked) {
+        if (elements.saveTextCheckbox.checked) {
           textarea.addEventListener("input", saveContent);
         }
       }
