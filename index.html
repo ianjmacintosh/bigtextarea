@@ -12,7 +12,7 @@
 
       body {
         margin: 0;
-        padding: 20px;
+        padding: 5px;
         font-family: monospace;
 
         min-height: 100dvh;
@@ -24,12 +24,26 @@
       }
 
       form[role="main"] {
+        align-items: center;
         display: grid;
-        grid-auto-rows: auto 1fr;
+        grid-template-areas:
+          "label controls"
+          "textarea textarea";
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto 1fr;
         gap: 5px;
       }
 
+      form[role="main"] label {
+        grid-area: label;
+      }
+
+      form[role="main"] .controls {
+        grid-area: controls;
+      }
+
       .textarea {
+        grid-area: textarea;
         height: 100%;
         width: 100%;
         border: solid 1px black;
@@ -44,7 +58,39 @@
       }
 
       button {
+        display: flex;
+        flex-direction: row;
         font-family: monospace;
+        align-items: center;
+        gap: 10px;
+        background-color: oklch(0.97 0 0);
+        border: none;
+        padding: 5px 10px;
+        border-radius: 20px;
+        border: solid 1px oklch(0.8 0 0);
+        transition:
+          background-color 120ms linear,
+          color 120ms linear;
+      }
+
+      button:hover,
+      button:focus {
+        background-color: oklch(0.95 0 0);
+        color: #666;
+      }
+
+      button:focus {
+        outline: solid 2px dodgerblue;
+        outline-offset: 1px;
+      }
+
+      button svg {
+        transition: color 120ms linear;
+      }
+
+      button:hover svg,
+      button:focus svg {
+        color: #666;
       }
 
       #settings {
@@ -79,6 +125,11 @@
         animation:
           fade-in 180ms ease-out,
           bubble-in 180ms ease-out;
+      }
+
+      .close-button {
+        padding: 10px;
+        border-radius: 0;
       }
 
       #settings::backdrop {
@@ -128,6 +179,7 @@
         display: grid;
         grid-auto-flow: column;
         grid-template-columns: 1fr auto;
+        align-items: center;
       }
 
       #settings header h1 {
@@ -151,8 +203,8 @@
     />
   </head>
   <body>
-    <form action="#" id="form" role="main">
-      <label for="textarea"> Enter text below</label>
+    <form action="/" id="form" role="main">
+      <label for="textarea">Enter text below</label>
       <textarea
         id="textarea"
         name="textarea"
@@ -163,31 +215,48 @@
         aria-label="Content"
         autofocus
       ></textarea>
+      <div class="controls">
+        <button type="button" id="settings-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-settings-icon lucide-settings"
+          >
+            <path
+              d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
+            />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          <span>Settings</span>
+        </button>
+      </div>
     </form>
-    <footer>
-      <button id="settings-button"><span>Settings</span></button>
-      <span id="credits"
-        >&copy; 2026
-        <a href="https://www.ianjmacintosh.com/" target="_blank"
-          >Ian J. MacIntosh</a
-        ></span
-      >
-    </footer>
     <dialog aria-labelledby="settings-heading" closedby="any" id="settings">
       <form method="dialog">
         <header>
           <h1 id="settings-heading">Settings</h1>
-          <button aria-label='Close "Settings"'>
+          <button aria-label='Close "Settings"' class="close-button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              fill="#000000"
-              viewBox="0 0 256 256"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-x-icon lucide-x"
             >
-              <path
-                d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"
-              ></path>
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
             </svg>
           </button>
         </header>
@@ -212,6 +281,14 @@
           </li>
         </ul>
       </form>
+      <footer>
+        <span id="credits"
+          >&copy; 2026
+          <a href="https://www.ianjmacintosh.com/" target="_blank"
+            >Ian J. MacIntosh</a
+          ></span
+        >
+      </footer>
     </dialog>
     <script src="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.js"></script>
 
