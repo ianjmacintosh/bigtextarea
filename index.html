@@ -38,7 +38,7 @@
         grid-area: label;
       }
 
-      form[role="main"] button {
+      form[role="main"] .controls {
         grid-area: controls;
       }
 
@@ -73,16 +73,23 @@
           color 120ms linear;
       }
 
-      button:hover {
+      button:hover,
+      button:focus {
         background-color: oklch(0.95 0 0);
         color: #666;
+      }
+
+      button:focus {
+        outline: solid 2px dodgerblue;
+        outline-offset: 1px;
       }
 
       button svg {
         transition: color 120ms linear;
       }
 
-      button:hover svg {
+      button:hover svg,
+      button:focus svg {
         color: #666;
       }
 
@@ -120,7 +127,8 @@
           bubble-in 180ms ease-out;
       }
 
-      #settings button {
+      .close-button {
+        padding: 10px;
         border-radius: 0;
       }
 
@@ -207,26 +215,28 @@
         aria-label="Content"
         autofocus
       ></textarea>
-      <button type="button" id="settings-button">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-settings-icon lucide-settings"
-        >
-          <path
-            d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
-          />
-          <circle cx="12" cy="12" r="3" />
-        </svg>
-        <span>Settings</span>
-      </button>
+      <div class="controls">
+        <button type="button" id="settings-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-settings-icon lucide-settings"
+          >
+            <path
+              d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
+            />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          <span>Settings</span>
+        </button>
+      </div>
     </form>
     <dialog aria-labelledby="settings-heading" closedby="any" id="settings">
       <form method="dialog">
@@ -235,14 +245,18 @@
           <button aria-label='Close "Settings"' class="close-button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              fill="#000000"
-              viewBox="0 0 256 256"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-x-icon lucide-x"
             >
-              <path
-                d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"
-              ></path>
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
             </svg>
           </button>
         </header>
