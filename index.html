@@ -23,7 +23,7 @@
         gap: 10px;
       }
 
-      form[role="main"] {
+      #form {
         align-items: center;
         display: grid;
         grid-template-areas:
@@ -34,24 +34,32 @@
         gap: 5px;
       }
 
-      form[role="main"] label {
+      #form > label {
         grid-area: label;
       }
 
-      form[role="main"] .controls {
+      #form .controls {
         display: flex;
         flex-direction: row;
         gap: 20px;
         grid-area: controls;
+        align-items: center;
       }
 
-      .textarea {
+      #form .controls label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      #form .textarea {
         grid-area: textarea;
         height: 100%;
         width: 100%;
         border: solid 1px black;
         font-family: monospace;
-        font-size: 16px;
+        font-size: var(--font-size);
+        line-height: inherit;
         padding: 5px;
       }
 
@@ -206,20 +214,29 @@
     />
   </head>
   <body>
-    <form action="/" id="form" role="main">
+    <form
+      action="/"
+      id="form"
+      class="main-form"
+      role="main"
+      style="--font-size: 16px"
+    >
       <label for="textarea">Enter text below</label>
       <textarea
         id="textarea"
         name="textarea"
         class="textarea"
         cols="80"
-        rows="10"
+        rows="4"
         role="main"
         aria-label="Content"
         autofocus
       ></textarea>
       <div class="controls">
-        <input type="text" value="100%" />
+        <label for="font-size-input"
+          ><span id="font-size-label-text"></span>
+          <input type="range" min="0" max="4" value="1" id="font-size-input" />
+        </label>
         <button type="button" id="settings-button">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -298,8 +315,10 @@
 
     <script>
       const elements = {
+        form: document.getElementById("form"),
         settings: document.getElementById("settings"),
         textarea: document.getElementById("textarea"),
+        fontSizeControl: document.getElementById("font-size-input"),
         settingsButton: document.getElementById("settings-button"),
         markdownCheckbox: document.getElementById("format-content"),
         saveTextCheckbox: document.getElementById("save-content"),
@@ -339,7 +358,17 @@
           updateMarkdownHandling,
         );
         elements.saveTextCheckbox.addEventListener("change", updateSaveText);
+        elements.fontSizeControl.addEventListener("input", updateFontSize);
+        updateFontSize();
       })();
+
+      function updateFontSize() {
+        const newValue = elements.fontSizeControl.value;
+        const fontSize = ["8px", "16px", "24px", "48px", "128px"];
+        document.getElementById("font-size-label-text").textContent =
+          `Font size: ${fontSize[newValue]}`;
+        elements.form.style = `--font-size: ${fontSize[newValue]}`;
+      }
 
       function toggleSettings() {
         document.body.classList.add("modal-visible");
