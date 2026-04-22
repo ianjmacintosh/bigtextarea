@@ -39,6 +39,9 @@
       }
 
       form[role="main"] .controls {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
         grid-area: controls;
       }
 
@@ -216,6 +219,7 @@
         autofocus
       ></textarea>
       <div class="controls">
+        <input type="text" value="100%" />
         <button type="button" id="settings-button">
           <svg
             xmlns="http://www.w3.org/2000/svg"
