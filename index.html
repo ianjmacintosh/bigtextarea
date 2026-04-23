@@ -84,6 +84,34 @@
         align-items: center;
       }
 
+      .font-size-control {
+        display: grid;
+        grid-template-areas:
+          "size-down label size-up"
+          "size-down control size-up";
+
+        background-color: oklch(0.97 0 0);
+        border: none;
+        padding: 5px 10px;
+        border-radius: 20px;
+        border: solid 1px oklch(0.8 0 0);
+      }
+
+      .font-size-control #zoom-out-button {
+        grid-area: size-down;
+      }
+
+      .font-size-control #zoom-in-button {
+        grid-area: size-up;
+      }
+
+      .font-size-control label {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        grid-area: label;
+      }
+
       #form .controls label {
         display: flex;
         align-items: center;
@@ -122,10 +150,17 @@
           color 120ms linear;
       }
 
-      button:hover,
-      button:focus {
+      button:hover:not(:disabled),
+      button:focus:not(:disabled),
+      button:hover:not(:disabled) svg,
+      button:focus:not(:disabled) svg {
         background-color: oklch(0.95 0 0);
         color: #666;
+      }
+
+      button:disabled {
+        background-color: oklch(0.95 0 0);
+        color: oklch(0.8 0 0);
       }
 
       button:focus {
@@ -135,11 +170,6 @@
 
       button svg {
         transition: color 120ms linear;
-      }
-
-      button:hover svg,
-      button:focus svg {
-        color: #666;
       }
 
       #settings {
@@ -266,10 +296,51 @@
         autofocus
       ></textarea>
       <div class="controls">
-        <label for="font-size-input"
-          ><span id="font-size-label-text"></span>
+        <button type="button">Change font size</button>
+        <div class="font-size-control">
+          <button id="zoom-out-button" type="button" aria-label="Zoom out">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-aarrow-down-icon lucide-a-arrow-down"
+            >
+              <path d="m14 12 4 4 4-4" />
+              <path d="M18 16V7" />
+              <path d="m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16" />
+              <path d="M3.304 13h6.392" />
+            </svg>
+          </button>
+          <label for="font-size-input"
+            ><span id="font-size-label-text"></span>
+          </label>
           <input type="range" min="0" max="4" value="1" id="font-size-input" />
-        </label>
+          <button id="zoom-in-button" type="button" aria-label="Zoom in">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-aarrow-up-icon lucide-a-arrow-up"
+            >
+              <path d="m14 11 4-4 4 4" />
+              <path d="M18 16V7" />
+              <path d="m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16" />
+              <path d="M3.304 13h6.392" />
+            </svg>
+          </button>
+        </div>
         <button type="button" id="settings-button">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -351,6 +422,8 @@
         form: document.getElementById("form"),
         settings: document.getElementById("settings"),
         textarea: document.getElementById("textarea"),
+        zoomOutButton: document.getElementById("zoom-out-button"),
+        zoomInButton: document.getElementById("zoom-in-button"),
         fontSizeControl: document.getElementById("font-size-input"),
         settingsButton: document.getElementById("settings-button"),
         markdownCheckbox: document.getElementById("format-content"),
@@ -380,6 +453,14 @@
           activateFormatting();
         }
 
+        // Bind event listeners
+        elements.zoomOutButton.addEventListener("click", function zoomOut() {
+          adjustFontSize(-1);
+        });
+        elements.zoomInButton.addEventListener("click", function zoomIn() {
+          adjustFontSize(1);
+        });
+
         // Open/close Settings window
         elements.settingsButton.addEventListener("click", toggleSettings);
 
@@ -389,12 +470,41 @@
           updateMarkdownHandling,
         );
         elements.saveTextCheckbox.addEventListener("change", updateSaveText);
-        elements.fontSizeControl.addEventListener("input", updateFontSize);
-        updateFontSize();
+        elements.fontSizeControl.addEventListener(
+          "input",
+          handleFontSizeChange,
+        );
+
+        handleFontSizeChange();
       })();
 
-      function updateFontSize() {
-        const newValue = elements.fontSizeControl.value;
+      function adjustFontSize(adjustment) {
+        if (typeof adjustment === "undefined") return;
+
+        let newValue = parseInt(elements.fontSizeControl.value, 10);
+        newValue += adjustment;
+
+        if (
+          newValue > parseInt(elements.fontSizeControl.max, 10) ||
+          newValue < parseInt(elements.fontSizeControl.min, 10)
+        ) {
+          return;
+        }
+
+        elements.fontSizeControl.value = newValue;
+        elements.fontSizeControl.dispatchEvent(new Event("input"));
+      }
+
+      function handleFontSizeChange() {
+        let newValue = parseInt(elements.fontSizeControl.value, 10);
+
+        console.log(parseInt(elements.fontSizeControl.max, 10));
+
+        elements.zoomInButton.disabled =
+          newValue >= parseInt(elements.fontSizeControl.max, 10);
+        elements.zoomOutButton.disabled =
+          newValue <= parseInt(elements.fontSizeControl.min, 10);
+
         localStorage.setItem("zoom", newValue);
         const fontSize = ["8px", "16px", "24px", "48px", "128px"];
         document.getElementById("font-size-label-text").textContent =
