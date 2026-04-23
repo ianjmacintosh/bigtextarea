@@ -86,23 +86,31 @@
 
       .font-size-control {
         display: grid;
-        grid-template-areas:
-          "size-down label size-up"
-          "size-down control size-up";
+        grid-template-areas: "size-down label size-up";
 
         background-color: oklch(0.97 0 0);
         border: none;
-        padding: 5px 10px;
         border-radius: 20px;
         border: solid 1px oklch(0.8 0 0);
+        column-gap: 5px;
       }
 
       .font-size-control #zoom-out-button {
         grid-area: size-down;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        padding-right: 5px;
       }
 
       .font-size-control #zoom-in-button {
         grid-area: size-up;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        padding-left: 5px;
+      }
+
+      .font-size-control button {
+        border: none;
       }
 
       .font-size-control label {
@@ -320,7 +328,14 @@
           <label for="font-size-input"
             ><span id="font-size-label-text"></span>
           </label>
-          <input type="range" min="0" max="4" value="1" id="font-size-input" />
+          <input
+            type="range"
+            min="0"
+            max="4"
+            value="1"
+            id="font-size-input"
+            style="display: none"
+          />
           <button id="zoom-in-button" type="button" aria-label="Zoom in">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -508,7 +523,7 @@
         localStorage.setItem("zoom", newValue);
         const fontSize = ["8px", "16px", "24px", "48px", "128px"];
         document.getElementById("font-size-label-text").textContent =
-          `Size: ${parseInt(newValue, 10) * 1 + 1}`;
+          `Zoom: ${parseInt(newValue, 10) * 1 + 1}`;
         elements.form.style = `--font-size: ${fontSize[newValue]}`;
       }
 
