@@ -58,18 +58,28 @@
         display: grid;
         grid-auto-flow: row;
         grid-template-rows: 1fr auto;
-        gap: 10px;
       }
 
       #form {
         align-items: center;
         display: grid;
         grid-template-areas:
-          "label controls"
-          "textarea textarea";
+          "label label"
+          "textarea textarea"
+          "controls controls";
         grid-template-columns: 1fr auto;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: auto 1fr auto;
         gap: 5px;
+      }
+
+      @media screen and (min-width: 768px) {
+        #form {
+          grid-template-areas:
+            "label controls"
+            "textarea textarea";
+          grid-template-columns: 1fr auto;
+          grid-template-rows: auto 1fr;
+        }
       }
 
       #form > label {
@@ -82,6 +92,7 @@
         gap: 20px;
         grid-area: controls;
         align-items: center;
+        justify-content: flex-end;
       }
 
       .font-size-control {
