@@ -5,6 +5,44 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Big Text Area</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.css"
+    />
+    <style>
+      .TMBlankLine {
+        height: var(--font-size);
+      }
+
+      .TMH1,
+      .TMSetextH1 {
+        font-size: calc(var(--font-size) * 2);
+        line-height: calc(var(--font-size) * 2);
+      }
+
+      .TMH2,
+      .TMSetextH2 {
+        font-size: calc(var(--font-size) * 1.6);
+        line-height: calc(var(--font-size) * 1.6);
+      }
+
+      .TMMark_TMCode,
+      .TMCode,
+      .TMFencedCodeBacktick,
+      .TMFencedCodeTilde,
+      .TMIndentedCode,
+      .TMCodeFenceBacktickOpen,
+      .TMCodeFenceTildeOpen,
+      .TMCodeFenceBacktickClose,
+      .TMCodeFenceTildeClose,
+      .TMHTML,
+      .TMHTMLBlock,
+      .TMCommandButton {
+        font-size: var(--font-size);
+        line-height: var(--font-size);
+      }
+    </style>
     <style>
       * {
         box-sizing: border-box;
@@ -59,7 +97,7 @@
         border: solid 1px black;
         font-family: monospace;
         font-size: var(--font-size);
-        line-height: inherit;
+        line-height: var(--font-size);
         padding: 5px;
       }
 
@@ -207,11 +245,6 @@
         background: lightgoldenrodyellow;
       }
     </style>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.css"
-    />
   </head>
   <body>
     <form
@@ -366,7 +399,7 @@
         const newValue = elements.fontSizeControl.value;
         const fontSize = ["8px", "16px", "24px", "48px", "128px"];
         document.getElementById("font-size-label-text").textContent =
-          `Font size: ${fontSize[newValue]}`;
+          `Size: ${parseInt(newValue, 10) * 1 + 1}`;
         elements.form.style = `--font-size: ${fontSize[newValue]}`;
       }
 
