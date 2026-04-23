@@ -300,7 +300,7 @@
       id="form"
       class="main-form"
       role="main"
-      style="--font-size: 16px"
+      style="--font-size: 12px"
     >
       <label for="textarea">Enter text below</label>
       <textarea
@@ -527,7 +527,7 @@
           newValue <= parseInt(elements.fontSizeControl.min, 10);
 
         localStorage.setItem("zoom", newValue);
-        const fontSize = ["8px", "16px", "24px", "48px", "128px"];
+        const fontSize = ["8px", "12px", "18px", "42px", "118px"];
         document.getElementById("font-size-label-text").textContent =
           `Zoom: ${parseInt(newValue, 10) * 1 + 1}`;
         elements.form.style = `--font-size: ${fontSize[newValue]}`;
