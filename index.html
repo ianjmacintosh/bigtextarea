@@ -360,7 +360,10 @@
 
       (function initializeApp() {
         if (localStorage) {
-          elements.checked = localStorage.getItem("save") === "true";
+          elements.fontSizeControl.value = localStorage.getItem("zoom") || "1";
+          elements.saveTextCheckbox.checked =
+            localStorage.getItem("save") === null ||
+            localStorage.getItem("save") === "true";
           elements.markdownCheckbox.checked =
             localStorage.getItem("format") === "true";
           elements.textarea.value = localStorage.getItem("content") ?? "";
@@ -368,12 +371,7 @@
           elements.saveTextCheckbox.disabled = true;
         }
 
-        if (
-          elements.saveTextCheckbox.checked ||
-          localStorage.getItem("save") === null ||
-          localStorage.getItem("save") === "true"
-        ) {
-          elements.saveTextCheckbox.checked = true;
+        if (elements.saveTextCheckbox.checked) {
           saveContent();
           elements.textarea.addEventListener("input", saveContent);
         }
@@ -397,6 +395,7 @@
 
       function updateFontSize() {
         const newValue = elements.fontSizeControl.value;
+        localStorage.setItem("zoom", newValue);
         const fontSize = ["8px", "16px", "24px", "48px", "128px"];
         document.getElementById("font-size-label-text").textContent =
           `Size: ${parseInt(newValue, 10) * 1 + 1}`;
