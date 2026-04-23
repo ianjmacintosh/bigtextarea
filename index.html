@@ -305,7 +305,7 @@
       role="main"
       style="--font-size: 12px"
     >
-      <label for="textarea">Enter text below</label>
+      <label for="textarea" id="textarea-label">Enter text below</label>
       <textarea
         id="textarea"
         name="textarea"
@@ -448,6 +448,7 @@
         form: document.getElementById("form"),
         settings: document.getElementById("settings"),
         textarea: document.getElementById("textarea"),
+        textareaLabel: document.getElementById("textarea-label"),
         zoomOutButton: document.getElementById("zoom-out-button"),
         zoomInButton: document.getElementById("zoom-in-button"),
         fontSizeControl: document.getElementById("font-size-input"),
@@ -486,6 +487,18 @@
         elements.zoomInButton.addEventListener("click", function zoomIn() {
           adjustFontSize(1);
         });
+
+        elements.textareaLabel.addEventListener(
+          "click",
+          function focusOnTextarea() {
+            if (elements.tinyMDE !== null) {
+              elements.tinyMDE.e.focus();
+              elements.tinyMDE.setSelection({ col: Infinity, row: Infinity });
+            } else {
+              elements.textarea.focus();
+            }
+          },
+        );
 
         // Open/close Settings window
         elements.settingsButton.addEventListener("click", toggleSettings);
@@ -548,17 +561,17 @@
       }
 
       function activateFormatting() {
-        tinyMDE = new TinyMDE.Editor({ textarea });
-        tinyMDE.e.classList.add("textarea");
+        elements.tinyMDE = new TinyMDE.Editor({ textarea });
+        elements.tinyMDE.e.classList.add("textarea");
 
         if (elements.saveTextCheckbox.checked) {
           textarea.removeEventListener("input", saveContent);
-          tinyMDE.addEventListener("change", saveContent);
+          elements.tinyMDE.addEventListener("change", saveContent);
         }
       }
 
       function deactivateFormatting() {
-        tinyMDE.e.remove();
+        elements.tinyMDE.e.remove();
         elements.textarea.setAttribute("style", "display: inherit");
 
         if (elements.saveTextCheckbox.checked) {
