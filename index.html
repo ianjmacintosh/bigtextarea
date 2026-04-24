@@ -177,21 +177,40 @@
         font-size: 16px;
       }
 
-      .controls button:hover:not(:disabled),
+      @media (hover: hover) and (pointer: fine) {
+        .controls button:hover:not(:disabled),
+        .controls button:hover:not(:disabled) svg {
+          background-color: oklch(0.95 0 0);
+          color: dodgerblue;
+        }
+
+        #settings header button:hover {
+          background: lightgoldenrodyellow;
+        }
+
+        #settings label:hover input[type="checkbox"] {
+          outline: solid 2px dodgerblue;
+          outline-offset: 1px;
+        }
+      }
+
+      #settings input:focus {
+        outline: solid 2px dodgerblue;
+        outline-offset: 1px;
+      }
+
       .controls button:focus:not(:disabled),
-      .controls button:hover:not(:disabled) svg,
       .controls button:focus:not(:disabled) svg {
         background-color: oklch(0.95 0 0);
         color: dodgerblue;
       }
-
-      button:disabled {
-        color: oklch(0.8 0 0);
-      }
-
       button:focus {
         outline: solid 2px dodgerblue;
         outline-offset: 2px;
+      }
+
+      button:disabled {
+        color: oklch(0.8 0 0);
       }
 
       button svg {
@@ -259,12 +278,6 @@
         align-items: center;
       }
 
-      #settings input:focus,
-      #settings label:hover input[type="checkbox"] {
-        outline: solid 2px dodgerblue;
-        outline-offset: 1px;
-      }
-
       .hidden,
       #settings.hidden {
         display: none;
@@ -295,10 +308,6 @@
       #settings header button {
         border: none;
         background: transparent;
-      }
-
-      #settings header button:hover {
-        background: lightgoldenrodyellow;
       }
     </style>
   </head>
