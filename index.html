@@ -49,9 +49,12 @@
       }
 
       body {
+        color: #000;
+        background: #fff;
         margin: 0;
         padding: 5px;
         font-family: monospace;
+        font-size: 16px;
 
         height: 100dvh;
         min-width: 100dvw;
@@ -100,7 +103,7 @@
         display: grid;
         grid-template-areas: "size-down label size-up";
 
-        background-color: oklch(0.97 0 0);
+        background-color: oklch(0.98 0 0);
         border: none;
         border-radius: 20px;
         border: solid 1px oklch(0.8 0 0);
@@ -157,12 +160,13 @@
       }
 
       button {
+        color: #000;
         display: flex;
         flex-direction: row;
         font-family: monospace;
         align-items: center;
         gap: 10px;
-        background-color: oklch(0.97 0 0);
+        background-color: oklch(0.98 0 0);
         border: none;
         padding: 5px 10px;
         border-radius: 20px;
@@ -170,23 +174,43 @@
         transition:
           background-color 120ms linear,
           color 120ms linear;
+        font-size: 16px;
       }
 
-      .controls button:hover:not(:disabled),
+      @media (hover: hover) and (pointer: fine) {
+        .controls button:hover:not(:disabled),
+        .controls button:hover:not(:disabled) svg {
+          background-color: oklch(0.95 0 0);
+          color: dodgerblue;
+        }
+
+        #settings header button:hover {
+          background: lightgoldenrodyellow;
+        }
+
+        #settings label:hover input[type="checkbox"] {
+          outline: solid 2px dodgerblue;
+          outline-offset: 1px;
+        }
+      }
+
+      #settings input:focus {
+        outline: solid 2px dodgerblue;
+        outline-offset: 1px;
+      }
+
       .controls button:focus:not(:disabled),
-      .controls button:hover:not(:disabled) svg,
       .controls button:focus:not(:disabled) svg {
         background-color: oklch(0.95 0 0);
         color: dodgerblue;
       }
-
-      button:disabled {
-        color: oklch(0.8 0 0);
-      }
-
       button:focus {
         outline: solid 2px dodgerblue;
         outline-offset: 2px;
+      }
+
+      button:disabled {
+        color: oklch(0.8 0 0);
       }
 
       button svg {
@@ -254,12 +278,6 @@
         align-items: center;
       }
 
-      #settings input:focus,
-      #settings label:hover input[type="checkbox"] {
-        outline: solid 2px dodgerblue;
-        outline-offset: 1px;
-      }
-
       .hidden,
       #settings.hidden {
         display: none;
@@ -291,10 +309,6 @@
         border: none;
         background: transparent;
       }
-
-      #settings header button:hover {
-        background: lightgoldenrodyellow;
-      }
     </style>
   </head>
   <body>
@@ -303,7 +317,7 @@
       id="form"
       class="main-form"
       role="main"
-      style="--font-size: 12px"
+      style="--font-size: 16px"
     >
       <label for="textarea" id="textarea-label">Enter text below</label>
       <textarea
@@ -543,7 +557,7 @@
           newValue <= parseInt(elements.fontSizeControl.min, 10);
 
         localStorage.setItem("zoom", newValue);
-        const fontSize = ["8px", "12px", "18px", "42px", "118px"];
+        const fontSize = ["8px", "16px", "32px", "64px", "128px"];
         document.getElementById("font-size-label-text").textContent =
           `Zoom: ${parseInt(newValue, 10) * 1 + 1}`;
         elements.form.style = `--font-size: ${fontSize[newValue]}`;
