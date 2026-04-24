@@ -309,6 +309,61 @@
         border: none;
         background: transparent;
       }
+
+      /* Animate icons for #17 */
+      #zoom-out-button .minus,
+      #zoom-in-button .plus {
+        transition: transform 300ms ease-in;
+      }
+
+      #zoom-out-button:focus .minus {
+        transform: scale(0.6);
+      }
+
+      #zoom-in-button:focus .plus {
+        transform: scale(1.4);
+      }
+
+      #zoom-in-button .plus {
+        transform-origin: 11px 11px;
+      }
+
+      .lucide-zoom-out-icon .minus {
+        transform-origin: 11px 11px;
+      }
+
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      #settings-button .gear {
+        animation: spin 2.5s linear infinite;
+        animation-play-state: paused;
+      }
+
+      #settings-button:focus .gear {
+        animation-play-state: running;
+      }
+
+      .lucide-settings-icon .gear {
+        transform-origin: 12px 12px;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        #zoom-out-button:hover:not(:disabled) .minus {
+          transform: scale(0.6);
+        }
+
+        #zoom-in-button:hover:not(:disabled) .plus {
+          transform: scale(1.4);
+        }
+
+        #settings-button:hover:not(:disabled) .gear {
+          animation-play-state: running;
+        }
+      }
     </style>
   </head>
   <body>
@@ -347,7 +402,7 @@
             >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" x2="16.65" y1="21" y2="16.65" />
-              <line x1="8" x2="14" y1="11" y2="11" />
+              <line x1="8" x2="14" y1="11" y2="11" class="minus" />
             </svg>
           </button>
           <label for="font-size-input"
@@ -376,8 +431,10 @@
             >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" x2="16.65" y1="21" y2="16.65" />
-              <line x1="11" x2="11" y1="8" y2="14" />
-              <line x1="8" x2="14" y1="11" y2="11" />
+              <g class="plus">
+                <line x1="11" x2="11" y1="8" y2="14" />
+                <line x1="8" x2="14" y1="11" y2="11" />
+              </g>
             </svg>
           </button>
         </div>
@@ -394,10 +451,12 @@
             stroke-linejoin="round"
             class="lucide lucide-settings-icon lucide-settings"
           >
-            <path
-              d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
-            />
-            <circle cx="12" cy="12" r="3" />
+            <g class="gear">
+              <path
+                d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
+              />
+              <circle cx="12" cy="12" r="3" />
+            </g>
           </svg>
           <span>Settings</span>
         </button>
