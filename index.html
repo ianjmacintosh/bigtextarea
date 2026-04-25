@@ -4,45 +4,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Big Text Area</title>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.css"
+    <meta
+      name="description"
+      content="A big empty space for you to dump text. In other words: a big text area"
     />
-    <style>
-      .TMBlankLine {
-        height: var(--font-size);
-      }
-
-      .TMH1,
-      .TMSetextH1 {
-        font-size: calc(var(--font-size) * 2);
-        line-height: 1.4;
-      }
-
-      .TMH2,
-      .TMSetextH2 {
-        font-size: calc(var(--font-size) * 1.6);
-        line-height: 1.4;
-      }
-
-      .TMMark_TMCode,
-      .TMCode,
-      .TMFencedCodeBacktick,
-      .TMFencedCodeTilde,
-      .TMIndentedCode,
-      .TMCodeFenceBacktickOpen,
-      .TMCodeFenceTildeOpen,
-      .TMCodeFenceBacktickClose,
-      .TMCodeFenceTildeClose,
-      .TMHTML,
-      .TMHTMLBlock,
-      .TMCommandButton {
-        font-size: var(--font-size);
-        line-height: 1.4;
-      }
-    </style>
+    <title>Big Text Area</title>
     <style>
       * {
         box-sizing: border-box;
@@ -514,7 +480,41 @@
         >
       </footer>
     </dialog>
-    <script src="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/styles/tiny-mde.min.css" />
+    <style>
+      .TMBlankLine {
+        height: var(--font-size);
+      }
+
+      .TMH1,
+      .TMSetextH1 {
+        font-size: calc(var(--font-size) * 2);
+        line-height: 1.4;
+      }
+
+      .TMH2,
+      .TMSetextH2 {
+        font-size: calc(var(--font-size) * 1.6);
+        line-height: 1.4;
+      }
+
+      .TMMark_TMCode,
+      .TMCode,
+      .TMFencedCodeBacktick,
+      .TMFencedCodeTilde,
+      .TMIndentedCode,
+      .TMCodeFenceBacktickOpen,
+      .TMCodeFenceTildeOpen,
+      .TMCodeFenceBacktickClose,
+      .TMCodeFenceTildeClose,
+      .TMHTML,
+      .TMHTMLBlock,
+      .TMCommandButton {
+        font-size: var(--font-size);
+        line-height: 1.4;
+      }
+    </style>
+    <script src="/scripts/tiny-mde.min.js"></script>
 
     <script>
       const elements = {
