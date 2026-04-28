@@ -144,8 +144,12 @@
       }
 
       @media (hover: hover) and (pointer: fine) {
-        .controls button:hover:not(:disabled),
-        .controls button:hover:not(:disabled) svg {
+        .controls button:hover:not(:disabled) {
+          background-color: oklch(0.95 0 0);
+        }
+
+        .controls button:hover:not(:disabled) span,
+        .controls #settings-button:hover:not(:disabled) {
           background-color: oklch(0.95 0 0);
           color: dodgerblue;
         }
@@ -179,7 +183,8 @@
         color: oklch(0.8 0 0);
       }
 
-      button svg {
+      button svg,
+      button span {
         transition: color 120ms linear;
       }
 
