@@ -556,6 +556,7 @@
 
         if (elements.markdownCheckbox.checked) {
           activateFormatting();
+          focusOnTextarea();
         }
 
         // Bind event listeners
@@ -566,17 +567,7 @@
           adjustFontSize(1);
         });
 
-        elements.textareaLabel.addEventListener(
-          "click",
-          function focusOnTextarea() {
-            if (elements.tinyMDE !== null) {
-              elements.tinyMDE.e.focus();
-              elements.tinyMDE.setSelection({ col: Infinity, row: Infinity });
-            } else {
-              elements.textarea.focus();
-            }
-          },
-        );
+        elements.textareaLabel.addEventListener("click", focusOnTextarea);
 
         // Open/close Settings window
         elements.settingsButton.addEventListener("click", toggleSettings);
@@ -594,6 +585,15 @@
 
         handleFontSizeChange();
       })();
+
+      function focusOnTextarea() {
+        if (elements.tinyMDE !== null) {
+          elements.tinyMDE.e.focus();
+          elements.tinyMDE.setSelection({ col: Infinity, row: Infinity });
+        } else {
+          elements.textarea.focus();
+        }
+      }
 
       function adjustFontSize(adjustment) {
         if (typeof adjustment === "undefined") return;
