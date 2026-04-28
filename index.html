@@ -138,9 +138,14 @@
         border-radius: 20px;
         border: solid 1px oklch(0.8 0 0);
         transition:
+          transform 0 linear,
           background-color 120ms linear,
           color 120ms linear;
         font-size: 16px;
+      }
+
+      button:active {
+        transform: scale(0.95);
       }
 
       @media (hover: hover) and (pointer: fine) {
