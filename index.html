@@ -144,7 +144,17 @@
         font-size: 16px;
       }
 
-      button:active {
+      button:active:not(:disabled) {
+        transform: scale(0.95);
+      }
+
+      #zoom-out-button:active:not(:disabled),
+      #zoom-in-button:active:not(:disabled) {
+        transform: none;
+      }
+
+      #zoom-out-button:active:not(:disabled) svg,
+      #zoom-in-button:active:not(:disabled) svg {
         transform: scale(0.95);
       }
 
@@ -153,11 +163,6 @@
           background-color: oklch(0.95 0 0);
         }
 
-        .controls button:hover:not(:disabled) span,
-        .controls #settings-button:hover:not(:disabled) {
-          background-color: oklch(0.95 0 0);
-          color: dodgerblue;
-        }
 
         #settings header button:hover {
           background: lightgoldenrodyellow;
@@ -174,11 +179,11 @@
         outline-offset: 1px;
       }
 
-      .controls button:focus:not(:disabled),
-      .controls button:focus:not(:disabled) svg {
+      .controls button:focus:not(:disabled) {
         background-color: oklch(0.95 0 0);
-        color: dodgerblue;
       }
+
+
       button:focus {
         outline: solid 2px dodgerblue;
         outline-offset: 2px;
@@ -291,22 +296,22 @@
       #zoom-in-button .lens,
       #zoom-out-button .minus,
       #zoom-in-button .plus {
-        transition: transform 300ms ease-in;
+        transition: transform 30ms ease-in;
       }
 
-      #zoom-out-button:focus .lens {
+      #zoom-out-button:active:not(:disabled) .lens {
         transform: scale(1.1);
       }
 
-      #zoom-out-button:focus .minus {
+      #zoom-out-button:active:not(:disabled) .minus {
         transform: scale(0.6);
       }
 
-      #zoom-in-button:focus .lens {
+      #zoom-in-button:active:not(:disabled) .lens {
         transform: scale(0.9);
       }
 
-      #zoom-in-button:focus .plus {
+      #zoom-in-button:active:not(:disabled) .plus {
         transform: scale(1.4);
       }
 
@@ -342,26 +347,6 @@
       }
 
       @media (hover: hover) and (pointer: fine) {
-        #zoom-out-button:hover:not(:disabled) .lens {
-          transform: scale(1.1);
-        }
-
-        #zoom-out-button:hover:not(:disabled) .minus {
-          transform: scale(0.6);
-        }
-
-        #zoom-in-button:hover:not(:disabled) .lens {
-          transform: scale(0.9);
-        }
-
-        #zoom-out-button:hover:not(:disabled) .minus {
-          transform: scale(0.6);
-        }
-
-        #zoom-in-button:hover:not(:disabled) .plus {
-          transform: scale(1.4);
-        }
-
         #settings-button:hover:not(:disabled) .gear {
           animation-play-state: running;
         }
