@@ -1,715 +1,649 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="A big empty space for you to dump text. In other words: a big text area"
-    />
-    <title>Big Text Area</title>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
 
-      body {
-        color: #000;
-        background: #fff;
-        margin: 0;
-        padding: 5px;
-        font-family: monospace;
-        font-size: 16px;
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A big empty space for you to dump text. In other words: a big text area" />
+  <title>Big Text Area</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        height: 100dvh;
-        min-width: 100dvw;
-        display: grid;
-        grid-auto-flow: row;
-        grid-template-rows: 1fr auto;
-      }
+    body {
+      color: #000;
+      background: #fff;
+      margin: 0;
+      padding: 5px;
+      font-family: monospace;
+      font-size: 16px;
 
+      height: 100dvh;
+      min-width: 100dvw;
+      display: grid;
+      grid-auto-flow: row;
+      grid-template-rows: 1fr auto;
+    }
+
+    #form {
+      align-items: center;
+      min-height: 0;
+      display: grid;
+      grid-template-areas:
+        "label label"
+        "textarea textarea"
+        "controls controls";
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto 1fr auto;
+      gap: 5px;
+    }
+
+    @media screen and (min-width: 768px) {
       #form {
-        align-items: center;
-        min-height: 0;
-        display: grid;
         grid-template-areas:
-          "label label"
-          "textarea textarea"
-          "controls controls";
+          "label controls"
+          "textarea textarea";
         grid-template-columns: 1fr auto;
-        grid-template-rows: auto 1fr auto;
-        gap: 5px;
+        grid-template-rows: auto 1fr;
       }
+    }
 
-      @media screen and (min-width: 768px) {
-        #form {
-          grid-template-areas:
-            "label controls"
-            "textarea textarea";
-          grid-template-columns: 1fr auto;
-          grid-template-rows: auto 1fr;
-        }
-      }
+    #form .textarea-label-wrapper {
+      grid-area: label;
+    }
 
-      #form .textarea-label-wrapper {
-        grid-area: label;
-      }
+    #form .controls {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      grid-area: controls;
+      align-items: center;
+      justify-content: flex-end;
+    }
 
-      #form .controls {
-        display: flex;
-        flex-direction: row;
-        gap: 20px;
-        grid-area: controls;
-        align-items: center;
-        justify-content: flex-end;
-      }
+    .font-size-control {
+      display: grid;
+      grid-template-areas: "size-down label size-up";
 
-      .font-size-control {
-        display: grid;
-        grid-template-areas: "size-down label size-up";
+      background-color: oklch(0.98 0 0);
+      border: none;
+      border-radius: 20px;
+      border: solid 1px oklch(0.8 0 0);
+      column-gap: 5px;
+    }
 
-        background-color: oklch(0.98 0 0);
-        border: none;
-        border-radius: 20px;
-        border: solid 1px oklch(0.8 0 0);
-        column-gap: 5px;
-      }
+    .font-size-control #zoom-out-button {
+      grid-area: size-down;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      padding-right: 5px;
+    }
 
-      .font-size-control #zoom-out-button {
-        grid-area: size-down;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        padding-right: 5px;
-      }
+    .font-size-control #zoom-in-button {
+      grid-area: size-up;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      padding-left: 5px;
+    }
 
-      .font-size-control #zoom-in-button {
-        grid-area: size-up;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-        padding-left: 5px;
-      }
+    .font-size-control button {
+      border: none;
+    }
 
-      .font-size-control button {
-        border: none;
-      }
+    .font-size-control label {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      grid-area: label;
+    }
 
-      .font-size-control label {
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        grid-area: label;
-      }
+    #form .controls label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-      #form .controls label {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
+    #form .textarea {
+      grid-area: textarea;
+      height: 100%;
+      min-height: 0;
+      width: 100%;
+      overflow-y: auto;
+      border: solid 1px black;
+      font-family: monospace;
+      font-size: var(--font-size);
+      line-height: 1.4;
+      padding: 5px;
+    }
 
-      #form .textarea {
-        grid-area: textarea;
-        height: 100%;
-        min-height: 0;
-        width: 100%;
-        overflow-y: auto;
-        border: solid 1px black;
-        font-family: monospace;
-        font-size: var(--font-size);
-        line-height: 1.4;
-        padding: 5px;
-      }
+    .textarea:focus {
+      outline: solid 2px dodgerblue;
+      outline-offset: 1px;
+    }
 
-      .textarea:focus {
-        outline: solid 2px dodgerblue;
-        outline-offset: 1px;
-      }
+    button {
+      color: #000;
+      display: flex;
+      flex-direction: row;
+      font-family: monospace;
+      align-items: center;
+      gap: 10px;
+      background-color: oklch(0.98 0 0);
+      border: none;
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: solid 1px oklch(0.8 0 0);
+      transition:
+        transform 0 linear,
+        background-color 120ms linear,
+        color 120ms linear;
+      font-size: 16px;
+    }
 
-      button {
-        color: #000;
-        display: flex;
-        flex-direction: row;
-        font-family: monospace;
-        align-items: center;
-        gap: 10px;
-        background-color: oklch(0.98 0 0);
-        border: none;
-        padding: 5px 10px;
-        border-radius: 20px;
-        border: solid 1px oklch(0.8 0 0);
-        transition:
-          transform 0 linear,
-          background-color 120ms linear,
-          color 120ms linear;
-        font-size: 16px;
-      }
+    button:active:not(:disabled) {
+      transform: scale(0.95);
+    }
 
-      button:active:not(:disabled) {
-        transform: scale(0.95);
-      }
+    #zoom-out-button:active:not(:disabled),
+    #zoom-in-button:active:not(:disabled) {
+      transform: none;
+    }
 
-      #zoom-out-button:active:not(:disabled),
-      #zoom-in-button:active:not(:disabled) {
-        transform: none;
-      }
+    #zoom-out-button:active:not(:disabled) svg,
+    #zoom-in-button:active:not(:disabled) svg {
+      transform: scale(0.95);
+    }
 
-      #zoom-out-button:active:not(:disabled) svg,
-      #zoom-in-button:active:not(:disabled) svg {
-        transform: scale(0.95);
-      }
-
-      @media (hover: hover) and (pointer: fine) {
-        .controls button:hover:not(:disabled) {
-          background-color: oklch(0.95 0 0);
-        }
-
-
-        #settings header button:hover {
-          background: lightgoldenrodyellow;
-        }
-
-        #settings label:hover input[type="checkbox"] {
-          outline: solid 2px dodgerblue;
-          outline-offset: 1px;
-        }
-      }
-
-      #settings input:focus {
-        outline: solid 2px dodgerblue;
-        outline-offset: 1px;
-      }
-
-      .controls button:focus:not(:disabled) {
+    @media (hover: hover) and (pointer: fine) {
+      .controls button:hover:not(:disabled) {
         background-color: oklch(0.95 0 0);
       }
 
 
-      button:focus {
+      #settings header button:hover {
+        background: lightgoldenrodyellow;
+      }
+
+      #settings label:hover input[type="checkbox"] {
         outline: solid 2px dodgerblue;
-        outline-offset: 2px;
+        outline-offset: 1px;
+      }
+    }
+
+    #settings input:focus {
+      outline: solid 2px dodgerblue;
+      outline-offset: 1px;
+    }
+
+    .controls button:focus:not(:disabled) {
+      background-color: oklch(0.95 0 0);
+    }
+
+
+    button:focus {
+      outline: solid 2px dodgerblue;
+      outline-offset: 2px;
+    }
+
+    button:disabled {
+      color: oklch(0.8 0 0);
+    }
+
+    button svg,
+    button span {
+      transition: color 120ms linear;
+    }
+
+    #settings {
+      text-align: left;
+    }
+
+    @keyframes bubble-in {
+      0% {
+        transform: scale(90%);
       }
 
-      button:disabled {
-        color: oklch(0.8 0 0);
+      100% {
+        transform: scale(100%);
+      }
+    }
+
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
       }
 
-      button svg,
-      button span {
-        transition: color 120ms linear;
+      100% {
+        opacity: 1;
       }
+    }
 
-      #settings {
-        text-align: left;
+    .modal-visible {
+      filter: blur(4px);
+    }
+
+    #settings {
+      border: none;
+      animation:
+        fade-in 180ms ease-out,
+        bubble-in 180ms ease-out;
+    }
+
+    .close-button {
+      padding: 10px;
+      border-radius: 0;
+    }
+
+    #settings::backdrop {
+      background-color: rgba(20, 20, 20, 0.2);
+      animation: fade-in 180ms;
+    }
+
+    #settings ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    #settings input {
+      min-height: 24px;
+      min-width: 24px;
+    }
+
+    #settings label {
+      gap: 5px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .hidden,
+    #settings.hidden {
+      display: none;
+    }
+
+    footer {
+      display: grid;
+      grid-auto-columns: auto 1fr;
+      grid-auto-flow: column;
+    }
+
+    #credits {
+      text-align: right;
+    }
+
+    #settings header {
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+    }
+
+    #settings header h1 {
+      padding: 0;
+      margin: 0;
+    }
+
+    #settings header button {
+      border: none;
+      background: transparent;
+    }
+
+    /* Animate icons for #17 */
+    #zoom-out-button .lens,
+    #zoom-in-button .lens,
+    #zoom-out-button .minus,
+    #zoom-in-button .plus {
+      transition: transform 30ms ease-in;
+    }
+
+    #zoom-out-button:active:not(:disabled) .lens {
+      transform: scale(1.1);
+    }
+
+    #zoom-out-button:active:not(:disabled) .minus {
+      transform: scale(0.6);
+    }
+
+    #zoom-in-button:active:not(:disabled) .lens {
+      transform: scale(0.9);
+    }
+
+    #zoom-in-button:active:not(:disabled) .plus {
+      transform: scale(1.4);
+    }
+
+    .lens {
+      transform-origin: 11px 11px;
+    }
+
+    #zoom-in-button .plus {
+      transform-origin: 11px 11px;
+    }
+
+    .lucide-zoom-out-icon .minus {
+      transform-origin: 11px 11px;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
       }
+    }
 
-      @keyframes bubble-in {
-        0% {
-          transform: scale(90%);
-        }
+    #settings-button .gear {
+      animation: spin 2.5s linear infinite;
+      animation-play-state: paused;
+    }
 
-        100% {
-          transform: scale(100%);
-        }
-      }
+    #settings-button:focus .gear {
+      animation-play-state: running;
+    }
 
-      @keyframes fade-in {
-        0% {
-          opacity: 0;
-        }
-        100% {
-          opacity: 1;
-        }
-      }
+    .lucide-settings-icon .gear {
+      transform-origin: 12px 12px;
+    }
 
-      .modal-visible {
-        filter: blur(4px);
-      }
-
-      #settings {
-        border: none;
-        animation:
-          fade-in 180ms ease-out,
-          bubble-in 180ms ease-out;
-      }
-
-      .close-button {
-        padding: 10px;
-        border-radius: 0;
-      }
-
-      #settings::backdrop {
-        background-color: rgba(20, 20, 20, 0.2);
-        animation: fade-in 180ms;
-      }
-
-      #settings ul {
-        list-style: none;
-        padding-left: 0;
-      }
-
-      #settings input {
-        min-height: 24px;
-        min-width: 24px;
-      }
-
-      #settings label {
-        gap: 5px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-      }
-
-      .hidden,
-      #settings.hidden {
-        display: none;
-      }
-
-      footer {
-        display: grid;
-        grid-auto-columns: auto 1fr;
-        grid-auto-flow: column;
-      }
-
-      #credits {
-        text-align: right;
-      }
-
-      #settings header {
-        display: grid;
-        grid-auto-flow: column;
-        grid-template-columns: 1fr auto;
-        align-items: center;
-      }
-
-      #settings header h1 {
-        padding: 0;
-        margin: 0;
-      }
-
-      #settings header button {
-        border: none;
-        background: transparent;
-      }
-
-      /* Animate icons for #17 */
-      #zoom-out-button .lens,
-      #zoom-in-button .lens,
-      #zoom-out-button .minus,
-      #zoom-in-button .plus {
-        transition: transform 30ms ease-in;
-      }
-
-      #zoom-out-button:active:not(:disabled) .lens {
-        transform: scale(1.1);
-      }
-
-      #zoom-out-button:active:not(:disabled) .minus {
-        transform: scale(0.6);
-      }
-
-      #zoom-in-button:active:not(:disabled) .lens {
-        transform: scale(0.9);
-      }
-
-      #zoom-in-button:active:not(:disabled) .plus {
-        transform: scale(1.4);
-      }
-
-      .lens {
-        transform-origin: 11px 11px;
-      }
-
-      #zoom-in-button .plus {
-        transform-origin: 11px 11px;
-      }
-
-      .lucide-zoom-out-icon .minus {
-        transform-origin: 11px 11px;
-      }
-
-      @keyframes spin {
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      #settings-button .gear {
-        animation: spin 2.5s linear infinite;
-        animation-play-state: paused;
-      }
-
-      #settings-button:focus .gear {
+    @media (hover: hover) and (pointer: fine) {
+      #settings-button:hover:not(:disabled) .gear {
         animation-play-state: running;
       }
+    }
+  </style>
+</head>
 
-      .lucide-settings-icon .gear {
-        transform-origin: 12px 12px;
-      }
-
-      @media (hover: hover) and (pointer: fine) {
-        #settings-button:hover:not(:disabled) .gear {
-          animation-play-state: running;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <form
-      action="/"
-      id="form"
-      class="main-form"
-      role="main"
-      style="--font-size: 16px"
-    >
-      <div class="textarea-label-wrapper">
-        <label for="textarea" id="textarea-label">Enter text below</label>
-      </div>
-      <textarea
-        id="textarea"
-        name="textarea"
-        class="textarea"
-        cols="80"
-        rows="4"
-        role="main"
-        aria-label="Content"
-        autofocus
-      ></textarea>
-      <div class="controls">
-        <div class="font-size-control">
-          <button id="zoom-out-button" type="button" aria-label="Zoom out">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-zoom-out-icon lucide-zoom-out"
-            >
-              <g class="lens">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" x2="16.65" y1="21" y2="16.65" />
-              </g>
-              <line x1="8" x2="14" y1="11" y2="11" class="minus" />
-            </svg>
-          </button>
-          <label for="font-size-input"
-            ><span id="font-size-label-text"></span>
-          </label>
-          <input
-            type="range"
-            min="0"
-            max="4"
-            value="1"
-            id="font-size-input"
-            style="display: none"
-          />
-          <button id="zoom-in-button" type="button" aria-label="Zoom in">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-zoom-in-icon lucide-zoom-in"
-            >
-              <g class="lens">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" x2="16.65" y1="21" y2="16.65" />
-              </g>
-              <g class="plus">
-                <line x1="11" x2="11" y1="8" y2="14" />
-                <line x1="8" x2="14" y1="11" y2="11" />
-              </g>
-            </svg>
-          </button>
-        </div>
-        <button type="button" id="settings-button">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-settings-icon lucide-settings"
-          >
-            <g class="gear">
-              <path
-                d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
-              />
-              <circle cx="12" cy="12" r="3" />
+<body>
+  <form action="/" id="form" class="main-form" role="main" style="--font-size: 16px">
+    <div class="textarea-label-wrapper">
+      <label for="textarea" id="textarea-label">Enter text below</label>
+    </div>
+    <textarea id="textarea" name="textarea" class="textarea" cols="80" rows="4" role="main" aria-label="Content"
+      autofocus></textarea>
+    <div class="controls">
+      <div class="font-size-control">
+        <button id="zoom-out-button" type="button" aria-label="Zoom out">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-zoom-out-icon lucide-zoom-out">
+            <g class="lens">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" x2="16.65" y1="21" y2="16.65" />
+            </g>
+            <line x1="8" x2="14" y1="11" y2="11" class="minus" />
+          </svg>
+        </button>
+        <label for="font-size-input"><span id="font-size-label-text"></span>
+        </label>
+        <input type="range" min="0" max="4" value="1" id="font-size-input" style="display: none" />
+        <button id="zoom-in-button" type="button" aria-label="Zoom in">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-zoom-in-icon lucide-zoom-in">
+            <g class="lens">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" x2="16.65" y1="21" y2="16.65" />
+            </g>
+            <g class="plus">
+              <line x1="11" x2="11" y1="8" y2="14" />
+              <line x1="8" x2="14" y1="11" y2="11" />
             </g>
           </svg>
-          <span>Settings</span>
         </button>
       </div>
+      <button type="button" id="settings-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-settings-icon lucide-settings">
+          <g class="gear">
+            <path
+              d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+            <circle cx="12" cy="12" r="3" />
+          </g>
+        </svg>
+        <span>Settings</span>
+      </button>
+    </div>
+  </form>
+  <dialog aria-labelledby="settings-heading" closedby="any" id="settings">
+    <form method="dialog">
+      <header>
+        <h1 id="settings-heading">Settings</h1>
+        <button aria-label='Close "Settings"' class="close-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-x-icon lucide-x">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+      </header>
+      <ul>
+        <li>
+          <label id="format-content-label" for="format-content">
+            <input id="format-content" type="checkbox" />
+            <span>
+              Format content using Markdown (<a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">cheat
+                sheet</a>)</span>
+          </label>
+        </li>
+        <li>
+          <label id="save-content-label" for="save-content">
+            <input id="save-content" type="checkbox" />
+            <span>Keep text on reload</span>
+          </label>
+        </li>
+      </ul>
     </form>
-    <dialog aria-labelledby="settings-heading" closedby="any" id="settings">
-      <form method="dialog">
-        <header>
-          <h1 id="settings-heading">Settings</h1>
-          <button aria-label='Close "Settings"' class="close-button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-x-icon lucide-x"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </button>
-        </header>
-        <ul>
-          <li>
-            <label id="format-content-label" for="format-content">
-              <input id="format-content" type="checkbox" />
-              <span>
-                Format content using Markdown (<a
-                  href="https://www.markdownguide.org/cheat-sheet/"
-                  target="_blank"
-                  >cheat sheet</a
-                >)</span
-              >
-            </label>
-          </li>
-          <li>
-            <label id="save-content-label" for="save-content">
-              <input id="save-content" type="checkbox" />
-              <span>Keep text on reload</span>
-            </label>
-          </li>
-        </ul>
-      </form>
-      <footer>
-        <span id="credits"
-          >&copy; 2026
-          <a href="https://www.ianjmacintosh.com/" target="_blank"
-            >Ian J. MacIntosh</a
-          ></span
-        >
-      </footer>
-    </dialog>
-    <link rel="stylesheet" type="text/css" href="/styles/tiny-mde.min.css" />
-    <style>
-      .TMBlankLine {
-        height: var(--font-size);
+    <footer>
+      <span id="credits">&copy; 2026
+        <a href="https://www.ianjmacintosh.com/" target="_blank">Ian J. MacIntosh</a></span>
+    </footer>
+  </dialog>
+  <link rel="stylesheet" type="text/css" href="/styles/tiny-mde.min.css" />
+  <style>
+    .TMBlankLine {
+      height: var(--font-size);
+    }
+
+    .TMH1,
+    .TMSetextH1 {
+      font-size: calc(var(--font-size) * 2);
+      line-height: 1.4;
+    }
+
+    .TMH2,
+    .TMSetextH2 {
+      font-size: calc(var(--font-size) * 1.6);
+      line-height: 1.4;
+    }
+
+    .TMMark_TMCode,
+    .TMCode,
+    .TMFencedCodeBacktick,
+    .TMFencedCodeTilde,
+    .TMIndentedCode,
+    .TMCodeFenceBacktickOpen,
+    .TMCodeFenceTildeOpen,
+    .TMCodeFenceBacktickClose,
+    .TMCodeFenceTildeClose,
+    .TMHTML,
+    .TMHTMLBlock,
+    .TMCommandButton {
+      font-size: var(--font-size);
+      line-height: 1.4;
+    }
+  </style>
+  <script src="/scripts/tiny-mde.min.js"></script>
+
+  <script>
+    const elements = {
+      form: document.getElementById("form"),
+      settings: document.getElementById("settings"),
+      textarea: document.getElementById("textarea"),
+      textareaLabel: document.getElementById("textarea-label"),
+      zoomOutButton: document.getElementById("zoom-out-button"),
+      zoomInButton: document.getElementById("zoom-in-button"),
+      fontSizeControl: document.getElementById("font-size-input"),
+      settingsButton: document.getElementById("settings-button"),
+      markdownCheckbox: document.getElementById("format-content"),
+      saveTextCheckbox: document.getElementById("save-content"),
+      tinyMDE: null,
+    };
+
+    (function initializeApp() {
+      if (localStorage) {
+        elements.fontSizeControl.value = localStorage.getItem("zoom") || "1";
+        elements.saveTextCheckbox.checked =
+          localStorage.getItem("save") === null ||
+          localStorage.getItem("save") === "true";
+        elements.markdownCheckbox.checked =
+          localStorage.getItem("format") === "true";
+        elements.textarea.value = localStorage.getItem("content") ?? "";
+      } else {
+        elements.saveTextCheckbox.disabled = true;
       }
 
-      .TMH1,
-      .TMSetextH1 {
-        font-size: calc(var(--font-size) * 2);
-        line-height: 1.4;
+      if (elements.saveTextCheckbox.checked) {
+        saveContent();
+        elements.textarea.addEventListener("input", saveContent);
       }
 
-      .TMH2,
-      .TMSetextH2 {
-        font-size: calc(var(--font-size) * 1.6);
-        line-height: 1.4;
+      if (elements.markdownCheckbox.checked) {
+        activateFormatting();
+        focusOnTextarea();
       }
 
-      .TMMark_TMCode,
-      .TMCode,
-      .TMFencedCodeBacktick,
-      .TMFencedCodeTilde,
-      .TMIndentedCode,
-      .TMCodeFenceBacktickOpen,
-      .TMCodeFenceTildeOpen,
-      .TMCodeFenceBacktickClose,
-      .TMCodeFenceTildeClose,
-      .TMHTML,
-      .TMHTMLBlock,
-      .TMCommandButton {
-        font-size: var(--font-size);
-        line-height: 1.4;
+      // Bind event listeners
+      elements.zoomOutButton.addEventListener("click", function zoomOut() {
+        adjustFontSize(-1);
+      });
+      elements.zoomInButton.addEventListener("click", function zoomIn() {
+        adjustFontSize(1);
+      });
+
+      elements.textareaLabel.addEventListener("click", focusOnTextarea);
+
+      // Open/close Settings window
+      elements.settingsButton.addEventListener("click", toggleSettings);
+
+      // Individual settings
+      elements.markdownCheckbox.addEventListener(
+        "change",
+        updateMarkdownHandling,
+      );
+      elements.saveTextCheckbox.addEventListener("change", updateSaveText);
+      elements.fontSizeControl.addEventListener(
+        "input",
+        handleFontSizeChange,
+      );
+
+      handleFontSizeChange();
+    })();
+
+    function focusOnTextarea() {
+      if (elements.tinyMDE !== null) {
+        elements.tinyMDE.e.focus();
+        elements.tinyMDE.setSelection({ col: Infinity, row: Infinity });
+      } else {
+        elements.textarea.focus();
       }
-    </style>
-    <script src="/scripts/tiny-mde.min.js"></script>
+    }
 
-    <script>
-      const elements = {
-        form: document.getElementById("form"),
-        settings: document.getElementById("settings"),
-        textarea: document.getElementById("textarea"),
-        textareaLabel: document.getElementById("textarea-label"),
-        zoomOutButton: document.getElementById("zoom-out-button"),
-        zoomInButton: document.getElementById("zoom-in-button"),
-        fontSizeControl: document.getElementById("font-size-input"),
-        settingsButton: document.getElementById("settings-button"),
-        markdownCheckbox: document.getElementById("format-content"),
-        saveTextCheckbox: document.getElementById("save-content"),
-        tinyMDE: null,
-      };
+    function adjustFontSize(adjustment) {
+      if (typeof adjustment === "undefined") return;
 
-      (function initializeApp() {
-        if (localStorage) {
-          elements.fontSizeControl.value = localStorage.getItem("zoom") || "1";
-          elements.saveTextCheckbox.checked =
-            localStorage.getItem("save") === null ||
-            localStorage.getItem("save") === "true";
-          elements.markdownCheckbox.checked =
-            localStorage.getItem("format") === "true";
-          elements.textarea.value = localStorage.getItem("content") ?? "";
-        } else {
-          elements.saveTextCheckbox.disabled = true;
-        }
+      let newValue = parseInt(elements.fontSizeControl.value, 10);
+      newValue += adjustment;
 
-        if (elements.saveTextCheckbox.checked) {
-          saveContent();
-          elements.textarea.addEventListener("input", saveContent);
-        }
-
-        if (elements.markdownCheckbox.checked) {
-          activateFormatting();
-          focusOnTextarea();
-        }
-
-        // Bind event listeners
-        elements.zoomOutButton.addEventListener("click", function zoomOut() {
-          adjustFontSize(-1);
-        });
-        elements.zoomInButton.addEventListener("click", function zoomIn() {
-          adjustFontSize(1);
-        });
-
-        elements.textareaLabel.addEventListener("click", focusOnTextarea);
-
-        // Open/close Settings window
-        elements.settingsButton.addEventListener("click", toggleSettings);
-
-        // Individual settings
-        elements.markdownCheckbox.addEventListener(
-          "change",
-          updateMarkdownHandling,
-        );
-        elements.saveTextCheckbox.addEventListener("change", updateSaveText);
-        elements.fontSizeControl.addEventListener(
-          "input",
-          handleFontSizeChange,
-        );
-
-        handleFontSizeChange();
-      })();
-
-      function focusOnTextarea() {
-        if (elements.tinyMDE !== null) {
-          elements.tinyMDE.e.focus();
-          elements.tinyMDE.setSelection({ col: Infinity, row: Infinity });
-        } else {
-          elements.textarea.focus();
-        }
+      if (
+        newValue > parseInt(elements.fontSizeControl.max, 10) ||
+        newValue < parseInt(elements.fontSizeControl.min, 10)
+      ) {
+        return;
       }
 
-      function adjustFontSize(adjustment) {
-        if (typeof adjustment === "undefined") return;
+      elements.fontSizeControl.value = newValue;
+      elements.fontSizeControl.dispatchEvent(new Event("input"));
+    }
 
-        let newValue = parseInt(elements.fontSizeControl.value, 10);
-        newValue += adjustment;
+    function handleFontSizeChange() {
+      let newValue = parseInt(elements.fontSizeControl.value, 10);
 
-        if (
-          newValue > parseInt(elements.fontSizeControl.max, 10) ||
-          newValue < parseInt(elements.fontSizeControl.min, 10)
-        ) {
+      elements.zoomInButton.disabled =
+        newValue >= parseInt(elements.fontSizeControl.max, 10);
+      elements.zoomOutButton.disabled =
+        newValue <= parseInt(elements.fontSizeControl.min, 10);
+
+      localStorage.setItem("zoom", newValue);
+      const fontSize = ["8px", "16px", "32px", "64px", "128px"];
+      document.getElementById("font-size-label-text").textContent =
+        `Zoom: ${parseInt(newValue, 10) * 1 + 1}`;
+      elements.form.style = `--font-size: ${fontSize[newValue]}`;
+    }
+
+    function toggleSettings() {
+      document.body.classList.add("modal-visible");
+      elements.settings.addEventListener(
+        "close",
+        function removeModalVisibleClass() {
+          document.body.classList.remove("modal-visible");
+        },
+      );
+      elements.settings.showModal();
+    }
+
+    function activateFormatting() {
+      elements.tinyMDE = new TinyMDE.Editor({ textarea });
+      elements.tinyMDE.e.classList.add("textarea");
+
+      if (elements.saveTextCheckbox.checked) {
+        textarea.removeEventListener("input", saveContent);
+        elements.tinyMDE.addEventListener("change", saveContent);
+      }
+    }
+
+    function deactivateFormatting() {
+      elements.tinyMDE.e.remove();
+      elements.textarea.setAttribute("style", "display: inherit");
+
+      if (elements.saveTextCheckbox.checked) {
+        textarea.addEventListener("input", saveContent);
+      }
+    }
+
+    function updateMarkdownHandling(event) {
+      const isMarkdownCheckboxChecked = this.checked;
+      localStorage.setItem("format", isMarkdownCheckboxChecked);
+
+      if (isMarkdownCheckboxChecked) {
+        if (typeof TinyMDE === "undefined") {
+          alert("Text cannot be formatted because the plug-in didn't load!");
+
+          this.checked = false;
           return;
         }
-
-        elements.fontSizeControl.value = newValue;
-        elements.fontSizeControl.dispatchEvent(new Event("input"));
+        activateFormatting();
+      } else {
+        deactivateFormatting();
       }
+    }
 
-      function handleFontSizeChange() {
-        let newValue = parseInt(elements.fontSizeControl.value, 10);
-
-        elements.zoomInButton.disabled =
-          newValue >= parseInt(elements.fontSizeControl.max, 10);
-        elements.zoomOutButton.disabled =
-          newValue <= parseInt(elements.fontSizeControl.min, 10);
-
-        localStorage.setItem("zoom", newValue);
-        const fontSize = ["8px", "16px", "32px", "64px", "128px"];
-        document.getElementById("font-size-label-text").textContent =
-          `Zoom: ${parseInt(newValue, 10) * 1 + 1}`;
-        elements.form.style = `--font-size: ${fontSize[newValue]}`;
+    function updateSaveText(event) {
+      localStorage.setItem("save", String(this.checked));
+      if (this.checked) {
+        saveContent();
+        textarea.addEventListener("input", saveContent);
+      } else {
+        localStorage.removeItem("content");
+        textarea.removeEventListener("input", saveContent);
       }
+    }
 
-      function toggleSettings() {
-        document.body.classList.add("modal-visible");
-        elements.settings.addEventListener(
-          "close",
-          function removeModalVisibleClass() {
-            document.body.classList.remove("modal-visible");
-          },
-        );
-        elements.settings.showModal();
-      }
+    function saveContent() {
+      localStorage.setItem("content", textarea.value);
+    }
+  </script>
+</body>
 
-      function activateFormatting() {
-        elements.tinyMDE = new TinyMDE.Editor({ textarea });
-        elements.tinyMDE.e.classList.add("textarea");
-
-        if (elements.saveTextCheckbox.checked) {
-          textarea.removeEventListener("input", saveContent);
-          elements.tinyMDE.addEventListener("change", saveContent);
-        }
-      }
-
-      function deactivateFormatting() {
-        elements.tinyMDE.e.remove();
-        elements.textarea.setAttribute("style", "display: inherit");
-
-        if (elements.saveTextCheckbox.checked) {
-          textarea.addEventListener("input", saveContent);
-        }
-      }
-
-      function updateMarkdownHandling(event) {
-        const isMarkdownCheckboxChecked = this.checked;
-        localStorage.setItem("format", isMarkdownCheckboxChecked);
-
-        if (isMarkdownCheckboxChecked) {
-          if (typeof TinyMDE === "undefined") {
-            alert("Text cannot be formatted because the plug-in didn't load!");
-
-            this.checked = false;
-            return;
-          }
-          activateFormatting();
-        } else {
-          deactivateFormatting();
-        }
-      }
-
-      function updateSaveText(event) {
-        localStorage.setItem("save", String(this.checked));
-        if (this.checked) {
-          saveContent();
-          textarea.addEventListener("input", saveContent);
-        } else {
-          localStorage.removeItem("content");
-          textarea.removeEventListener("input", saveContent);
-        }
-      }
-
-      function saveContent() {
-        localStorage.setItem("content", textarea.value);
-      }
-    </script>
-  </body>
 </html>
